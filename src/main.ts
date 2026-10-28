@@ -23,11 +23,9 @@ renderer.code = ({ text, lang }) => {
 
 marked.use({ renderer });
 
-
-
 // 3. Fetch, parse, and render
 function cd(path: string) {
-  console.log(`src/content/${path}/read.md`)
+  console.log(`src/content/${path}/read.md`);
 
   fetch(`/src/content/${path}/read.md`)
     .then((response) => response.text())
@@ -49,6 +47,31 @@ function cd(path: string) {
     });
 }
 
-console.log(window.location.href.split('/').slice(3).join('/'));
-cd(window.location.href.split('/').slice(3).join('/'));
-// cd(window.location.href.split('/').slice(3).join('/'))
+function main() {
+  const bodyElement = document.body;
+
+  let elemDiv = document.createElement("div");
+  elemDiv.id = "terminal";
+
+  let inputTerminal = document.createElement("input");
+
+  elemDiv.appendChild(inputTerminal);
+
+  let button = document.createElement("button");
+
+  button.textContent = "execute command";
+
+  button.addEventListener("click", () => {
+    console.log(inputTerminal.value);
+
+    
+
+    cd(inputTerminal.value);
+  });
+
+  elemDiv.appendChild(button);
+
+  bodyElement.prepend(elemDiv);
+}
+
+main();
