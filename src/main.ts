@@ -1,60 +1,54 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.ts'
+import "./style.css";
+import { marked } from "marked";
+import mermaid from "mermaid";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+// 1. Initialize mermaid
+mermaid.initialize({
+  startOnLoad: false,
+  theme: "default",
+  securityLevel: "loose",
+});
 
-<div class="ticks"></div>
+// 2. Configure marked to intercept mermaid code blocks and turn them into <div class="mermaid">
+const renderer = new marked.Renderer();
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+renderer.code = ({ text, lang }) => {
+  if (lang === "mermaid") {
+    // Mermaid requires the raw source text inside a container with class="mermaid"
+    return `<div class="mermaid">${text}</div>`;
+  }
+  // Fallback for regular code blocks
+  return `<pre><code class="language-${lang}">${text}</code></pre>`;
+};
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+marked.use({ renderer });
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+
+
+// 3. Fetch, parse, and render
+function cd(path: string) {
+  console.log(`src/content/${path}/read.md`)
+
+  fetch(`/src/content/${path}/read.md`)
+    .then((response) => response.text())
+    .then(async (markdown) => {
+      // Parse markdown into HTML using our custom renderer
+      const htmlContent = await marked.parse(markdown);
+
+      // Inject into the app container
+      const appContainer = document.querySelector<HTMLDivElement>("#app")!;
+      appContainer.innerHTML = htmlContent;
+
+      // 4. Tell Mermaid to find all elements with class="mermaid" and render them
+      await mermaid.run({
+        nodes: appContainer.querySelectorAll(".mermaid"),
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to load markdown content:", error);
+    });
+}
+
+console.log(window.location.href.split('/').slice(3).join('/'));
+cd(window.location.href.split('/').slice(3).join('/'));
+// cd(window.location.href.split('/').slice(3).join('/'))
