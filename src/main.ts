@@ -1,10 +1,6 @@
 import "./style.css";
 import { marked } from "marked";
 import mermaid from "mermaid";
-import CdCommand from "./commads/cdCommand";
-import type Command from "./commads/command";
-import ClearCommand from "./commads/clearCommand";
-import HelpCommand from "./commads/helpCommand";
 import Terminal from "./terminal";
 
 // 1. Initialize mermaid
