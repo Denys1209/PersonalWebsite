@@ -1,6 +1,10 @@
 import "./style.css";
 import { marked } from "marked";
 import mermaid from "mermaid";
+import Cd from "./commads/cdCommand";
+import type Command from "./commads/command";
+import ClearCommand from "./commads/clearCommand";
+import HelpCommand from "./commads/helpCommand";
 
 // 1. Initialize mermaid
 mermaid.initialize({
@@ -23,28 +27,28 @@ renderer.code = ({ text, lang }) => {
 
 marked.use({ renderer });
 
-// 3. Fetch, parse, and render
-function cd(path: string) {
-  console.log(`src/content/${path}/read.md`);
+const listOfAvailableCommand: Map<string, Command> = new Map();
 
-  fetch(`/src/content/${path}/read.md`)
-    .then((response) => response.text())
-    .then(async (markdown) => {
-      // Parse markdown into HTML using our custom renderer
-      const htmlContent = await marked.parse(markdown);
+listOfAvailableCommand.set("cd", new Cd());
+listOfAvailableCommand.set("clear", new ClearCommand());
+listOfAvailableCommand.set("help", new HelpCommand(listOfAvailableCommand));
 
-      // Inject into the app container
-      const appContainer = document.querySelector<HTMLDivElement>("#app")!;
-      appContainer.innerHTML = htmlContent;
+function leaveMessageInTerminal(node: HTMLElement) {
+  const appContainer = document.querySelector<HTMLDivElement>("#app")!;
 
-      // 4. Tell Mermaid to find all elements with class="mermaid" and render them
-      await mermaid.run({
-        nodes: appContainer.querySelectorAll(".mermaid"),
-      });
-    })
-    .catch((error) => {
-      console.error("Failed to load markdown content:", error);
-    });
+  appContainer.append(node);
+}
+
+function parseCommand(text: string): void {
+  const args: string[] = text.trim().toLowerCase().split(" ");
+
+  if (!listOfAvailableCommand.has(args[0])) {
+    return;
+  }
+
+  const command = listOfAvailableCommand.get(args[0]);
+
+  command!.execute(args.slice(1));
 }
 
 function main() {
@@ -54,24 +58,29 @@ function main() {
   elemDiv.id = "terminal";
 
   let inputTerminal = document.createElement("input");
+  inputTerminal.id = "terminal-input";
+
+  inputTerminal.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      console.log(inputTerminal.value);
+
+      let leaveCommandDiv = document.createElement("div");
+      let commandText = document.createElement("p");
+      commandText.textContent = `>${inputTerminal.value}`;
+      leaveCommandDiv.appendChild(commandText);
+
+      leaveMessageInTerminal(leaveCommandDiv);
+
+      parseCommand(inputTerminal.value);
+
+      inputTerminal.value = "";
+    }
+  });
 
   elemDiv.appendChild(inputTerminal);
 
-  let button = document.createElement("button");
 
-  button.textContent = "execute command";
-
-  button.addEventListener("click", () => {
-    console.log(inputTerminal.value);
-
-    
-
-    cd(inputTerminal.value);
-  });
-
-  elemDiv.appendChild(button);
-
-  bodyElement.prepend(elemDiv);
+  bodyElement.append(elemDiv);
 }
 
 main();
