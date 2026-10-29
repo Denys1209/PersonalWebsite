@@ -1,11 +1,28 @@
+import type Terminal from "../terminal";
 
-export default interface Command 
+export default abstract class Command 
 {
-    name: string;
+    public name: string;
 
-    desciption: string;
+    public description: string;
 
-    execute(args: string[]): void;    
+    protected terminal: Terminal;
+
+    constructor(name: string, description: string,   terminal: Terminal)
+    {
+        this.name = name;
+
+        this.description = description;
+
+        this.terminal = terminal
+    }
+
+
+
+    execute(args: string[]): void 
+    {
+        throw Error(`This execute is no implement ${this.name}`);
+    }
 
 }
 

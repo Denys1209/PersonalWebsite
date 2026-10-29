@@ -1,11 +1,15 @@
-import type Command from "./command";
+import type Terminal from "../terminal";
+import Command from "./command";
 
 
 
-export default class slCommand implements Command 
+export default class slCommand extends Command 
 {
-    name = "ls";
-    desciption = "ls";
+
+    constructor(terminal: Terminal)
+    {
+        super("sl", "tree", terminal);
+    }
 
     execute(args: string[]): void {
 

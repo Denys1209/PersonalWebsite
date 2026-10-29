@@ -1,10 +1,15 @@
 import { marked } from "marked";
-import type Command from "./command";
+import Command from "./command";
 import mermaid from "mermaid";
+import type Terminal from "../terminal";
 
-export default class Cd implements Command {
-  name = "cd";
-  desciption = "test";
+export default class CdCommand extends Command {
+
+
+  constructor(terminal : Terminal) 
+  {
+    super("cd", "move to a different directory", terminal);
+  }
 
   public execute(args: string[]): void {
     console.log(`src/${args[0]}/read.md`);
