@@ -12,7 +12,7 @@ export default class ClearCommand extends Command
 
 
 
-    execute(args: string[]): void {
+    public execute(args: string[]): void {
         const appContainer = document.querySelector<HTMLDivElement>("#app")!;
         appContainer.innerHTML = '';
     }

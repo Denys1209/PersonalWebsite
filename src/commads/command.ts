@@ -19,7 +19,7 @@ export default abstract class Command
 
 
 
-    execute(args: string[]): void 
+    public execute(args: string[]): void 
     {
         throw Error(`This execute is no implement ${this.name}`);
     }

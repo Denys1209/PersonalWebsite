@@ -3,6 +3,7 @@ import { marked } from "marked";
 import mermaid from "mermaid";
 import Terminal from "./terminal";
 
+
 // 1. Initialize mermaid
 mermaid.initialize({
   startOnLoad: false,

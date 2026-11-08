@@ -10,54 +10,18 @@ export default class CdCommand extends Command {
 
   public execute(args: string[]): void {
 
-    if (args.length !== 1)
-    {
-      return;
+    const input = args[0] ?? "/";
+    const target = this.terminal.fileSystem.resolve(this.terminal.cwd, input);
+
+    if (this.terminal.fileSystem.isFile(target)) {
+      return this.terminal.leaveError(`cd: ${input}: Not a directory`);
     }
 
-    if (args[0] === '..')
-    {
-      if (this.terminal.currentDirectory !== './')
-      {
-        const pathSplit = this.terminal.currentDirectory.split('/');
-
-
-        this.terminal.currentDirectory = pathSplit.slice(0, pathSplit.length-1).join('/') + '/';
-      }
+    if (!this.terminal.fileSystem.isDir(target)){
+      return this.terminal.leaveError(`cd: ${input}: No such file or directory`);
     }
-    else if (
-      this.terminal.currentDirectory[
-        this.terminal.currentDirectory.length - 1
-      ] === "/"
-    ) {
-      this.terminal.currentDirectory += args[0];
-    } else {
-      this.terminal.currentDirectory += '/' + args[0];
-    }
-    this.terminal.currectDirectoryTextNode.textContent = this.terminal.currentDirectory + '>';
 
-    // fetch(`/src/${args[0]}/read.md`)
-    //   .then((response) => response.text())
-    //   .then(async (markdown) => {
-    //     // Parse markdown into HTML using our custom renderer
-    //     const htmlContent = await marked.parse(markdown);
+    this.terminal.cwd = target;
 
-    //     // Inject into the app container
-    //     const appContainer = document.querySelector<HTMLDivElement>("#app")!;
-
-    //     const commandDiv = document.createElement("div");
-
-    //     commandDiv.innerHTML = htmlContent;
-
-    //     appContainer.append(commandDiv);
-
-    //     // 4. Tell Mermaid to find all elements with class="mermaid" and render them
-    //     await mermaid.run({
-    //       nodes: appContainer.querySelectorAll(".mermaid"),
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Failed to load markdown content:", error);
-    //   });
   }
 }

@@ -16,9 +16,7 @@ export default class HelpCommand extends Command
 
 
 
-    execute(args: string[]): void {
-        const appContainer = document.querySelector<HTMLDivElement>("#app")!;
-
+    public execute(args: string[]): void {
         let contentDiv = document.createElement("div");
 
         this.listOfAllCommands.forEach((value : Command) => 
@@ -35,7 +33,7 @@ export default class HelpCommand extends Command
                 contentDiv.append(newDiv)
             })
 
-        appContainer.append(contentDiv);
+        this.terminal.leaveMessageInTerminal(contentDiv);
     }
 
 }

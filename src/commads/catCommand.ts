@@ -8,31 +8,25 @@ export default class CatCommand extends Command {
     super("cat", "display file information", terminal);
   }
 
-  public execute(args: string[]): void {
-    console.log(`src/${this.terminal.currentDirectory.split('/').slice(1).join('/')}/${args[0]}`);
+  public async execute(args: string[]): Promise<void> {
+    if (!args[0]) return this.terminal.leaveError("cat: missing file name");
 
-    fetch(`src/${this.terminal.currentDirectory.split('/').slice(1).join('/')}/${args[0]}`)
-      .then((response) => response.text())
-      .then(async (markdown) => {
-        // Parse markdown into HTML using our custom renderer
-        const htmlContent = await marked.parse(markdown);
+    const path = this.terminal.fileSystem.resolve(this.terminal.cwd, args[0]);
 
-        // Inject into the app container
-        const appContainer = document.querySelector<HTMLDivElement>("#app")!;
+    if (this.terminal.fileSystem.isDir(path))
+    {
+      return this.terminal.leaveError(`cat: ${args[0]}: Is a directory`);
+    }
 
-        const commandDiv = document.createElement("div");
+    if (!this.terminal.fileSystem.isFile(path)){
+      return this.terminal.leaveError(`cat: ${args[0]}: No such file or directory`);
+    }
 
-        commandDiv.innerHTML = htmlContent;
-
-        appContainer.append(commandDiv);
-
-        // 4. Tell Mermaid to find all elements with class="mermaid" and render them
-        await mermaid.run({
-          nodes: appContainer.querySelectorAll(".mermaid"),
-        });
-      })
-      .catch((error) => {
-        console.error("Failed to load markdown content:", error);
-      });
+    const html = await marked.parse(this.terminal.fileSystem.read(path)!);
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    this.terminal.leaveMessageInTerminal(div);
+    await mermaid.run({nodes: div.querySelectorAll(".mermaid")});
+    
   }
 }
