@@ -1,10 +1,10 @@
 import { marked } from "marked";
 import Command from "./command";
 import mermaid from "mermaid";
-import type Terminal from "../terminal";
+import type TerminalView from "../views/terminalView";
 
 export default class CdCommand extends Command {
-  constructor(terminal: Terminal) {
+  constructor(terminal: TerminalView) {
     super("cd", "move to a different directory", terminal);
   }
 

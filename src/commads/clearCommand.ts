@@ -1,11 +1,11 @@
-import type Terminal from "../terminal";
+import type TerminalView from "../views/terminalView";
 import Command from "./command";
 
 
 export default class ClearCommand extends Command 
 {
 
-    constructor(terminal: Terminal)
+    constructor(terminal: TerminalView)
     {
         super("clear", "clear the terminal from previous command", terminal);
     }

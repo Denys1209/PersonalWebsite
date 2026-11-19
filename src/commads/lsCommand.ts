@@ -1,4 +1,4 @@
-import type Terminal from "../terminal";
+import type TerminalView from "../views/terminalView";
 import Command from "./command";
 
 
@@ -6,7 +6,7 @@ import Command from "./command";
 export default class LsCommand extends Command 
 {
 
-    constructor(terminal: Terminal)
+    constructor(terminal: TerminalView)
     {
         super("ls", "tree", terminal);
     }

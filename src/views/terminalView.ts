@@ -1,15 +1,18 @@
-import CatCommand from "./commads/catCommand";
-import CdCommand from "./commads/cdCommand";
-import ClearCommand from "./commads/clearCommand";
-import type Command from "./commads/command";
-import HelpCommand from "./commads/helpCommand";
-import LsCommand from "./commads/lsCommand";
-import { VirtualFS } from "./VirtualFS";
+import type App from "../app";
+import CatCommand from "../commads/catCommand";
+import CdCommand from "../commads/cdCommand";
+import ClearCommand from "../commads/clearCommand";
+import type Command from "../commads/command";
+import HelpCommand from "../commads/helpCommand";
+import LsCommand from "../commads/lsCommand";
+import { VirtualFS } from "../virtualFS";
+import type { View } from "./view";
 
-export default class Terminal {
+export default class TerminalView implements View {
   private listOfAvailableCommand: Map<string, Command>;
 
   private _cwd = "/";
+  private _app: App;
 
   public get cwd() {
     return this._cwd;
@@ -26,9 +29,10 @@ export default class Terminal {
 
   public fileSystem: VirtualFS;
 
-  
+  constructor(app: App) {
+    
+    this._app = app;
 
-  constructor() {
     this.listOfAvailableCommand = new Map();
 
     const cd = new CdCommand(this);
@@ -61,6 +65,15 @@ export default class Terminal {
 
     await commad!.execute(args);
   }
+  mount(root: HTMLElement): void {
+    throw new Error("Method not implemented.");
+  }
+  unmount(): void {
+    throw new Error("Method not implemented.");
+  }
+  onNavigate(path: string): void {
+    throw new Error("Method not implemented.");
+  }
 
   public leaveError(text: string) {
     const p = document.createElement("p");
@@ -91,8 +104,6 @@ export default class Terminal {
     inputTerminal.id = "terminal-input";
     terminalDiv.appendChild(inputTerminal);
 
-    terminalDiv.prepend(this.currectDirectoryTextNode);
-
     terminalDiv.id = "terminal";
 
     inputTerminal.addEventListener("keydown", (event) => {
@@ -101,7 +112,7 @@ export default class Terminal {
 
         let leaveCommandDiv = document.createElement("div");
         let commandText = document.createElement("p");
-        commandText.textContent = `${this.cwd}>${inputTerminal.value}`;
+        commandText.textContent = `${this._cwd}>${inputTerminal.value}`;
         leaveCommandDiv.appendChild(commandText);
 
         this.leaveMessageInTerminal(leaveCommandDiv);
@@ -112,6 +123,7 @@ export default class Terminal {
       }
     });
 
-    bodyElement.append(terminalDiv);
+    terminalDiv.prepend(this.currectDirectoryTextNode);
+    bodyElement.prepend(terminalDiv);
   }
 }

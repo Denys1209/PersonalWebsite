@@ -1,5 +1,5 @@
 
-import type Terminal from "../terminal";
+import type TerminalView from "../views/terminalView";
 import Command from "./command";
 
 
@@ -8,7 +8,7 @@ export default class HelpCommand extends Command
     private listOfAllCommands : Map<string, Command>;
 
 
-    public constructor(terminal: Terminal, listOfAllCommands: Map<string, Command>)
+    public constructor(terminal: TerminalView, listOfAllCommands: Map<string, Command>)
     {
         super("help", "list all commands with thier description", terminal);
         this.listOfAllCommands = listOfAllCommands;

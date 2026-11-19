@@ -1,4 +1,4 @@
-import type Terminal from "../terminal";
+import type TerminalView from "../views/terminalView";
 
 export default abstract class Command 
 {
@@ -6,9 +6,9 @@ export default abstract class Command
 
     public description: string;
 
-    protected terminal: Terminal;
+    protected terminal: TerminalView;
 
-    constructor(name: string, description: string,   terminal: Terminal)
+    constructor(name: string, description: string,   terminal: TerminalView)
     {
         this.name = name;
 

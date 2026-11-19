@@ -1,8 +1,11 @@
-import "./style.css";
+import "./styles/uiElements/toggle.css";
+
 import { marked } from "marked";
 import mermaid from "mermaid";
-import Terminal from "./terminal";
+import TerminalView from "./views/terminalView";
+import App from "./app";
 
+let terminalView: boolean = false;
 
 // 1. Initialize mermaid
 mermaid.initialize({
@@ -25,14 +28,34 @@ renderer.code = ({ text, lang }) => {
 
 marked.use({ renderer });
 
+let diagramId = 0;
 
+export async function renderMarkdown(markdown: string): Promise<HTMLElement> {
+  const el = document.createElement("div");
+  el.className = "markdown";
+  el.innerHTML = await marked.parse(markdown);
 
+  for (const node of el.querySelectorAll<HTMLElement>(".mermaid")) {
+    try {
+      const { svg } = await mermaid.render(
+        `mermaid-${diagramId++}`,
+        node.dataset.source ?? "",
+      );
+      node.innerHTML = svg;
+    } catch (err) {
+      console.error("Mermaid failed:", err);
+      node.textContent = "Diagram could not be rendered.";
+    }
+  }
+  return el;
+}
 
+// const terminal = new TerminalView();
 
-const terminal = new Terminal();
+const body = document.getElementById("app");
 
+const app = new App(body!);
 
+app.start();
 
-
-
-terminal.main();
+// main();
