@@ -1,7 +1,5 @@
-import { marked } from "marked";
 import type TerminalView from "../views/terminalView";
 import Command from "./command";
-import mermaid from "mermaid";
 import { renderMarkdown } from "../main";
 
 export default class CatCommand extends Command {
@@ -23,11 +21,6 @@ export default class CatCommand extends Command {
       return this.terminal.leaveError(`cat: ${args[0]}: No such file or directory`);
     }
 
-    // const html = await marked.parse(this.terminal.fileSystem.read(path)!);
-    // const div = document.createElement("div");
-    // div.innerHTML = html;
     this.terminal.leaveMessageInTerminal(await renderMarkdown(this.terminal.fileSystem.read(path)!));
-    // await mermaid.run({nodes: div.querySelectorAll(".mermaid")});
-    
   }
 }

@@ -12,6 +12,8 @@ export default class TerminalView implements View {
   private listOfAvailableCommand: Map<string, Command>;
 
   private _cwd = "/";
+  private _livingDiv = document.createElement("div");
+  private _terminalDiv = document.createElement("div");
   private _app: App;
 
   public get cwd() {
@@ -23,6 +25,10 @@ export default class TerminalView implements View {
     this.currectDirectoryTextNode.textContent = value + ">";
   }
 
+  public get livingDiv() {
+    return this._livingDiv;
+  }
+
   public currectDirectoryTextNode: Text;
 
   public currentDirectory: string = "./";
@@ -30,7 +36,6 @@ export default class TerminalView implements View {
   public fileSystem: VirtualFS;
 
   constructor(app: App) {
-    
     this._app = app;
 
     this.listOfAvailableCommand = new Map();
@@ -65,14 +70,18 @@ export default class TerminalView implements View {
 
     await commad!.execute(args);
   }
-  mount(root: HTMLElement): void {
-    throw new Error("Method not implemented.");
+
+  public mount(root: HTMLElement): void {
+    root.append(this._livingDiv);
   }
-  unmount(): void {
-    throw new Error("Method not implemented.");
+
+  public unmount(): void {
+    this._livingDiv.remove();
   }
-  onNavigate(path: string): void {
-    throw new Error("Method not implemented.");
+
+  public onNavigate(path: string): void {
+    this.main();
+    this.cwd = path;
   }
 
   public leaveError(text: string) {
@@ -89,22 +98,26 @@ export default class TerminalView implements View {
   }
 
   public leaveMessageInTerminal(node: HTMLElement) {
-    const appContainer = document.querySelector<HTMLDivElement>("#app")!;
-
-    appContainer.append(node);
+    this._terminalDiv.before(node);
   }
 
-  public main() {
-    const bodyElement = document.body;
+  public clearAllText() {
+    for (const child of Array.from(this._livingDiv.children)) {
+      if (child !== this._terminalDiv) {
+        child.remove();
+      }
+    }
+  }
 
-    let terminalDiv = document.createElement("div");
+  private main() {
+    this._terminalDiv = document.createElement("div");
 
     let inputTerminal = document.createElement("input");
 
     inputTerminal.id = "terminal-input";
-    terminalDiv.appendChild(inputTerminal);
+    this._terminalDiv.appendChild(inputTerminal);
 
-    terminalDiv.id = "terminal";
+    this._terminalDiv.id = "terminal";
 
     inputTerminal.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -123,7 +136,7 @@ export default class TerminalView implements View {
       }
     });
 
-    terminalDiv.prepend(this.currectDirectoryTextNode);
-    bodyElement.prepend(terminalDiv);
+    this._terminalDiv.prepend(this.currectDirectoryTextNode);
+    this._livingDiv.prepend(this._terminalDiv);
   }
 }

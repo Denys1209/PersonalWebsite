@@ -8,7 +8,7 @@ type Mode = "normal" | "terminal";
 export default class App {
   public fs = new VirtualFS();
   public path = "/";
-  private view: View | null = null;
+  private view: View = new NormalView(this);
   private mode: Mode = "normal";
   private content = document.createElement("main");
   private _root:HTMLElement;
@@ -47,7 +47,7 @@ export default class App {
   }
 
   private mountView() {
-    this.view?.unmount();
+    this.view.unmount();
     this.view =
       this.mode === "terminal" ? new TerminalView(this) : new NormalView(this);
     this.view.mount(this.content);

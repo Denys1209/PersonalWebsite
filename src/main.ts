@@ -34,19 +34,21 @@ export async function renderMarkdown(markdown: string): Promise<HTMLElement> {
   const el = document.createElement("div");
   el.className = "markdown";
   el.innerHTML = await marked.parse(markdown);
+  mermaid.run({nodes: el.querySelectorAll(".mermaid")});
+  
 
-  for (const node of el.querySelectorAll<HTMLElement>(".mermaid")) {
-    try {
-      const { svg } = await mermaid.render(
-        `mermaid-${diagramId++}`,
-        node.dataset.source ?? "",
-      );
-      node.innerHTML = svg;
-    } catch (err) {
-      console.error("Mermaid failed:", err);
-      node.textContent = "Diagram could not be rendered.";
-    }
-  }
+  // for (const node of el.querySelectorAll<HTMLElement>(".mermaid")) {
+  //   try {
+  //     const { svg } = await mermaid.render(
+  //       `mermaid-${diagramId++}`,
+  //       node.dataset.source ?? "",
+  //     );
+  //     node.innerHTML = svg;
+  //   } catch (err) {
+  //     console.error("Mermaid failed:", err);
+  //     node.textContent = "Diagram could not be rendered.";
+  //   }
+  // }
   return el;
 }
 
