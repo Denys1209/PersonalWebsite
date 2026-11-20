@@ -20,6 +20,7 @@ export default class NormalView implements View {
 
   public onNavigate(path: string): void {
     this.render(path);
+    this._app.navigate(path);
   }
 
   private link(label: string, path: string): HTMLAnchorElement {

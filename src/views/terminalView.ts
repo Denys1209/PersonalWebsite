@@ -72,6 +72,7 @@ export default class TerminalView implements View {
   }
 
   public mount(root: HTMLElement): void {
+    this.main();
     root.append(this._livingDiv);
   }
 
@@ -80,8 +81,8 @@ export default class TerminalView implements View {
   }
 
   public onNavigate(path: string): void {
-    this.main();
     this.cwd = path;
+    this._app.navigate(path);
   }
 
   public leaveError(text: string) {

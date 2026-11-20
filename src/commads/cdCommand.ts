@@ -22,6 +22,7 @@ export default class CdCommand extends Command {
     }
 
     this.terminal.cwd = target;
+    this.terminal.onNavigate(target);
 
   }
 }
