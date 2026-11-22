@@ -50,6 +50,7 @@ export default class App {
     this.view.unmount();
     this.view =
       this.mode === "terminal" ? new TerminalView(this) : new NormalView(this);
+    document.body.dataset.view = this.mode;
     this.view.mount(this.content);
     this.view.onNavigate(this.path);
   }
