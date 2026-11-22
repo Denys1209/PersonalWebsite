@@ -88,10 +88,10 @@ export default class NormalView implements View {
 
     this.el.replaceChildren(
       this.breadcrumbs(path), // <a href="#/projects"> links
+      this.childLinks(dir), // fs.list(dir) -> <a href="#/...">
       fs.isFile(mdPath)
         ? await renderMarkdown(fs.read(mdPath)!)
         : document.createElement("div"),
-      this.childLinks(dir), // fs.list(dir) -> <a href="#/...">
     );
   }
 }
