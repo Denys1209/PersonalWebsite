@@ -4,7 +4,7 @@
   padding: 1rem;
   background: var(--term-bg);
   color: var(--term-fg);
-  font: 16px/1.5 var(--font-mono);
+  font: 16px var(--font-mono);
 }
 
 .terminal-line {
@@ -29,6 +29,7 @@
   color: inherit;
   font: inherit;
   caret-color: var(--term-green);
+  
   
 }
 

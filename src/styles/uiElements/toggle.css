@@ -2,54 +2,21 @@
   position: relative;
   box-sizing: border-box;
 }
-.toggle input[type="checkbox"] {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  opacity: 0;
-}
-.toggle label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-.toggle label:before {
-  content: '';
-  width: 35px;
-  height: 20px;
-  background: #eee;
-  border: 2px solid #DDD;
-  box-shadow:inset 0 0 0 0 #13bf11 ;
-  position: relative;
-  display: inline-block;
+.toggle button {
+  height: 30px;
+  width: 150px;
   border-radius: 20px;
-  box-sizing: border-box;
-  transition: 0.25s ease-in-out;
+  cursor: pointer;
+
 }
-.toggle label:after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #DDD;
-  border-radius: 50%;
-  left: 0;
-  top: 0;
-  z-index: 2;
-  background: #fff;
-  box-shadow: 0 1px 10px #0002;
-  box-sizing: border-box;
-  transition: 0.25s ease-in-out;
+
+body[data-view="normal"] .toggle button {
+  background: black;
+  color: var(--term-green);
+  font: var(--font-mono);
 }
-.toggle input[type="checkbox"]:checked + label:before {
-  box-shadow: inset 0 0 0 18px #13bf11;
+
+body[data-view="terminal"] .toggle button {
+  background: white;
+  color: black;
 }
-.toggle input[type="checkbox"]:checked + label:after {
-  left: 15px;
-}
-    

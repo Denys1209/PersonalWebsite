@@ -11,16 +11,19 @@ export default class App {
   private view: View = new NormalView(this);
   private mode: Mode = "normal";
   private content = document.createElement("main");
-  private _root:HTMLElement;
+  private _root: HTMLElement;
 
-  constructor(root: HTMLElement)
-  {
+  constructor(root: HTMLElement) {
     this._root = root;
   }
 
   public start() {
+    try {
+      this.mode =
+        localStorage.getItem("view") === "terminal" ? "terminal" : "normal";
+    } catch {}
+
     this._root.append(this.buildToggle(), this.content);
-    try { this.mode = localStorage.getItem("view") === "terminal" ? "terminal" : "normal"; } catch {}
     window.addEventListener("hashchange", () => this.syncFromUrl());
     this.syncFromUrl();
     this.mountView();
@@ -57,16 +60,25 @@ export default class App {
 
   private buildToggle() {
     const toggle = document.createElement("div");
-    const input = document.createElement("input");
-    input.type = "checkbox";
+    const button = document.createElement("button");
+
     toggle.className = "toggle";
 
-    toggle.append(input);
-    toggle.append(document.createElement("label"));
+    if (this.mode === "normal") {
+      button.textContent = ">_ terminal view";
+    } else {
+      button.textContent = "normal view";
+    }
 
-    input.checked = this.mode === "normal" ? true : false;
-    toggle.addEventListener("click", () => {
+    toggle.append(button);
+
+    button.addEventListener("click", () => {
       this.setMode(this.mode === "normal" ? "terminal" : "normal");
+      if (this.mode === "normal") {
+        button.textContent = ">_ terminal view";
+      } else {
+        button.textContent = "normal view";
+      }
     });
 
     return toggle;
