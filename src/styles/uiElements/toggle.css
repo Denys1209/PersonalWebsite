@@ -1,12 +1,15 @@
 .toggle {
-  position: relative;
   box-sizing: border-box;
+  display: flex;
+  
+
 }
 .toggle button {
   height: 30px;
   width: 150px;
   border-radius: 20px;
   cursor: pointer;
+  margin-left: auto;
 
 }
 

@@ -1,6 +1,7 @@
 import "./styles/uiElements/toggle.css";
 import "./styles/style.css";
-import "./styles/uiElements/terminal.css";
+import "./styles/uiElements/views/terminalView/terminal.css";
+import "./styles/uiElements/views/normalView/breadcrumbs.css";
 
 
 import { marked } from "marked";

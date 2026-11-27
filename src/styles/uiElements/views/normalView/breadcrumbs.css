@@ -1,0 +1,11 @@
+.breadcrumbs {
+    color: var(--term-green);
+    font: var(--font-mono);
+}
+
+
+.breadcrumbs a {
+    text-decoration: none;
+    color: var(--term-green);
+    font: var(--font-mono);
+}

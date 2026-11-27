@@ -1,7 +1,6 @@
 .terminal {
   min-height: 100dvh;
   box-sizing: border-box;
-  padding: 1rem;
   background: var(--term-bg);
   color: var(--term-fg);
   font: 16px var(--font-mono);

@@ -11,9 +11,20 @@
 }
 
 body { margin: 0; }
-body[data-view="terminal"] { background: var(--term-bg); }
+body[data-view = "terminal"] {
+   background: var(--term-bg); 
+  padding: 1rem;
+}
+
+body[data-view = "normal"] {
+  padding: 1rem;
+}
 
 
 #app { min-height: 100dvh; display: flex; flex-direction: column; }
 #app > main { flex: 1; display: flex; flex-direction: column; }
 .terminal { flex: 1; min-height: 0; }   
+
+.markdown {
+  font: var(--font-mono);
+}

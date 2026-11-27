@@ -33,8 +33,9 @@ export default class NormalView implements View {
   private breadcrumbs(path: string): HTMLElement {
     const nav = document.createElement("nav");
     nav.setAttribute("aria-label", "Breadcrumb");
+    nav.className = "breadcrumbs";
 
-    const crumbs = [{ label: "home", path: "/" }];
+    const crumbs = [{ label: "~/home", path: "/" }];
 
     let acc = "";
 
@@ -44,10 +45,13 @@ export default class NormalView implements View {
     }
 
     crumbs.forEach((c, i) => {
-      if (i > 0) nav.append(" / ");
+      if (i > 0) nav.append("/");
+      
+      
       if (i === crumbs.length - 1) {
         // current page: plain text, not a link
         const here = document.createElement("span");
+        here.className = "breadcrumbs-label";
         here.textContent = c.label;
         here.setAttribute("aria-current", "page");
         nav.append(here);
